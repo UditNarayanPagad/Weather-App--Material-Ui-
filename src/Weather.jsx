@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InfoBox from './InfoBox';
@@ -21,10 +21,10 @@ const Weather = () => {
     let Api_Url = "https://api.openweathermap.org/data/2.5/weather?";
     let Api_Key = "3b4a2eca44f0c08a45cce04bc35ccff4";
 
-    async function apiCall(){
+    async function apiCall(city){
       let response = await fetch(`${Api_Url}q=${city}&appid=${Api_Key}&units=metric`);
       let jsonFormat = await response.json();
-     
+     console.log(jsonFormat)
       let details = {
         city : jsonFormat.name,
         temp : jsonFormat.main.temp,
@@ -40,14 +40,17 @@ const Weather = () => {
         return {...prev,...details}
       })
     }
+    useEffect(()=>{
+      apiCall('Bhubaneswar');
+    },[])
+    
     function trackValue(event){
         setcity(event.target.value);
     }
-
     function prevVal(event){
         event.preventDefault();
+        apiCall(city);
         setcity('');
-        apiCall();
     }
 
   return (
